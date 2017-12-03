@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #mymap {
+            border: 4px solid black;
+            width: 50%;
+            height:500px;
+        }
+    </style>
+    <title>MAP OF THE WORLD</title>
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+</head>
+<body>
+  <h1>Places I've Been</h1>
+  <div class="nav navbar-nav navbar-collapse">
+    <ul class="nav nav-pills">
+      <li><button id="rye">RYE</a></li>
+      <li><button id="brooklyn">BROOKLYN</a></li>
+      <li><button id="milford">MILFORD</a></li>
+      </ul>    
+  </div>
+  <div id="mymap">
+
+  </div> 
+  <div class="info">i Live here in Rye</div>  
+  
+  <script>
+    var map;
+    var rye ={lat: 40.9807,lng: -73.6837};
+    var brooklyn ={lat:40.691171,lng:-73.980824};
+    var milford = {lat:41.322167,lng:-74.803572};
+        function initMap() {
+             map = new google.maps.Map(document.getElementById('mymap'), {
+            center:rye ,
+            zoom:15
+
+            });
+    }
+   
+    $(function(){
+    $("button").click(function(){
+        var country = $(this).text()
+        console.log("click", country)
+        // Turn off currently active button
+        $("button.active").toggleClass("active")
+        // Turn on for clicked element
+        $(this).toggleClass("active")
+        if(country == "BROOKLYN") {
+            map.setCenter(brooklyn)
+            map.setZoom(15)
+            $(".info").text("Get an OverDose of comsci knowledge here")
+        }
+        if(country == "MILFORD") {
+            map.setCenter(milford)
+            map.setZoom(15)
+            $(".info").text("Come here to get away from NY for the weekends and to hangout with old friends.")
+        }
+          if(country == "RYE") {
+            map.setCenter(rye)
+            map.setZoom(15)
+            $(".info").text(", Dwell here")
+        }
+    })
+})
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
+								
+  </script>
+  
+    <script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCq0qwhD7bj2X7-NbgOe_MBVT9R4fciO7s&callback=initMap">
+  </script>
+ 
+</body>
+</html>
+
