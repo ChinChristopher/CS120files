@@ -1,0 +1,35 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+  <h1>{{ question.question_text }}</h1>
+
+  <ul>
+  {% for choice in question.choice_set.all %}
+      <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+  {% endfor %}
+  </ul>
+  <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+  <br>
+  <a href="{% url 'polls:index' %}"><h2>Polls<h2></a>
+ <div id="piechart" style="width: 900px; height: 500px;"></div>
+ <script>
+ google.charts.load('current', {'packages':['corechart']});
+ google.charts.setOnLoadCallback(drawChart);
+ var djangoData = {{ array|safe }};
+ function drawChart() {
+
+       var data = google.visualization.arrayToDataTable(djangoData);
+
+       var options = {
+         title: '{{question.question.text}}'
+       };
+
+       var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+       chart.draw(data, options);
+     }
+   </script>
+</body>
+</html>

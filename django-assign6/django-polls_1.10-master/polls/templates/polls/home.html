@@ -1,0 +1,17 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css" media="screen" />
+		<title>Hello</title>
+	</head>
+	<body>
+		<h1>welcome</h1>
+		<h2>this is my homepage</h2>
+		<br>
+		<img src="http://www.pngall.com/wp-content/uploads/2016/04/Potato-PNG-Clipart.png">
+		<h2>Navigate to:</h2>
+		<ul>
+			<li><a href="{% url 'admin:index' %}"><h2>Admin Login<h2></a></li>
+			<li><a href="{% url 'polls:index' %}"><h2>Polls<h2></a></li>
+		</ul>
+	</body>
+</html>

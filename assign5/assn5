@@ -1,0 +1,116 @@
+mport Html exposing (..)
+import Html.Attributes as Attr
+import Html.Events as Ev
+import Color exposing (..)
+import Color.Convert exposing (..)
+type alias Model = Color
+
+model : Model
+model = rgb 0 0 0
+
+
+type Msg
+  = ChangeRed Int
+  | ChangeGreen Int
+  | ChangeBlue Int
+  | ChangeHue Float     
+  | ChangeSat Float     
+  | ChangeLight Float
+
+update : Msg -> Model -> Model
+update msg model =
+  let c = toRgb model 
+      hsv = toHsl model
+  in case msg of
+       ChangeRed r -> rgb r c.green c.blue
+       ChangeGreen g -> rgb c.red g c.blue
+       ChangeBlue b -> rgb c.red c.green b
+       ChangeHue h -> hsl h hsv.saturation hsv.lightness
+       ChangeSat s -> hsl hsv.hue s hsv.lightness
+       ChangeLight l -> hsl hsv.hue hsv.saturation l
+
+{--TODO: fix nan--}
+
+toInt s =
+  Result.withDefault 0 (String.toInt s)
+toFloat x =
+  Result.withDefault 0 (String.toFloat x)
+toRadians r =
+ r*(180/pi)
+toPcnt p = p/100
+slider value msg =
+  input [ Attr.type_ "range",
+          Attr.value (toString value),
+          Attr.min "0",
+          Attr.max "255",
+          Ev.onInput (toInt >> msg)
+        ] []
+hueslider value msg =
+  input [  Attr.type_ "range",
+           Attr.value (toString value),
+           Attr.min "0",
+           Attr.max "360",
+           Ev.onInput (toFloat >> degrees >> msg)
+          ] []
+slslider value msg =
+    input [ Attr.type_ "range",
+            Attr.value(toString value),
+            Attr.min "0",
+            Attr.max "100",
+            Ev.onInput (toFloat >> toPcnt >> msg)
+    ] []
+
+view model =
+  let c = toRgb model
+      hsv = toHsl model
+    {-capturing-}
+      rgbStr = "rgb(" ++ toString c.red ++ ","
+                      ++ toString c.green ++ ","
+                      ++ toString c.blue  ++ ")"
+
+      {--cc = (rgb c.red c.green c.blue)--}
+      hexcolor = colorToHex(rgb c.red c.green c.blue)   {----RGB to hex----}
+      hslColor = Color.toHsl(rgb c.red c.green c.blue)
+      {--------
+        errors:
+        if all sliders == 0, Hue = NaN
+        if all sliders == 255, Hue = NaN && Saturation = NaN
+      ----------}
+  in
+  div [Attr.style [("border", "1px solid blue"), ("font-size", "36px")]]
+      [ text "Color Picker"
+      , br [] []
+      , text ("Hex-Code: " ++ toString hexcolor)
+      , br [] []
+      , text ("HSL: " ++ toString hslColor)
+      , br [] []
+      , br [] []
+      , text "R:\t\t\t\t\t\t"
+      , slider c.red ChangeRed
+      , br [] []
+      , text "G:\t\t\t\t\t\t"
+      , slider c.green ChangeGreen
+      , br [] []
+      , text "B:\t\t\t\t\t\t"
+      , slider c.blue ChangeBlue
+      , br [] []
+      {-------------------------}
+      , text "H:\t\t\t\t\t\t"
+      , hueslider (toRadians hsv.hue) ChangeHue
+      , br [] []
+      , text "S:\t\t\t\t\t\t"
+      , slslider (hsv.saturation*100) ChangeSat
+      , br [] []
+      , text "L:\t\t\t\t\t\t"
+      , slslider (hsv.lightness*100) ChangeLight
+      , br [] []
+      , text ("Value: " ++ toString model)
+      , div [Attr.style [("backgroundColor", rgbStr),
+                         ("width", "420px"),
+                         ("height", "420px"),
+                         ("position", "centered")]]
+            []
+      ]
+main =
+  beginnerProgram {model=model, view=view,
+                   update=update}
