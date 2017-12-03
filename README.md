@@ -1,5 +1,5 @@
 # CS120files
-Old web deelopment assignments
+Old web devlopment assignments
 assignment 1 was making a html webpage 
 assignment 2 using jekyll
 assignment 3 google maps webpage
